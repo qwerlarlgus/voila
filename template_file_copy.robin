@@ -1,0 +1,32 @@
+
+# Default directory
+
+Folder.GetSpecialFolder SpecialFolder:Folder.SpecialFolder.DesktopDirectory SpecialFolderPath=> SpecialFolderPath
+
+set dir_name to SpecialFolderPath+"\\parking_lot\\"
+
+# Checks whether a template file exist or not
+
+if(file.Exists File: SpecialFolderPath+'\\template_parking_lot.csv') then
+# Steps to perform if file.txt exists
+
+       Console.Write Message:  SpecialFolderPath+"\\template_parking_lot.csv"+" file exists!"       
+    else
+       Console.Write Message:  SpecialFolderPath+"\\template_parking_lot.csv"+" file NOT exists!"
+       goto skip
+
+# Steps to perform if file.txt does not
+end
+
+
+File.Copy Files: SpecialFolderPath+"\\template_parking_lot.csv" \
+    Destination: dir_name IfFileExists:File.IfExists.DoNothing CopiedFiles=> CopiedFiles
+
+
+File.RenameAddDateOrTime Files: CopiedFiles \
+        DateTimeToAdd:File.DateTimeToAdd.Current DateTimePosition:File.AddTextPosition.BeforeName \
+        DateTimeSeparator:File.Separator.Underscore DateTimeFormat:'yyyyMMdd' IfFileExists:File.IfExists.DoNothing RenamedFiles=> RenamedFiles
+
+label skip
+
+Console.Write Message:  "Program ends."
